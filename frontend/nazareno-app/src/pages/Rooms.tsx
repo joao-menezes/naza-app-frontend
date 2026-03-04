@@ -44,7 +44,11 @@ export default function Rooms() {
             background: 'linear-gradient(135deg, #c9a84c, #f0d080)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 16, flexShrink: 0,
-          }}>✝</div>
+          }}>
+          <img style={{
+            width: 25
+          }} src='../../public/icon-192.png'/>
+          </div>
           <div>
             <p style={{ color: '#fff', fontWeight: 600, fontSize: 16, margin: 0 }}>Nazareno União</p>
             <p style={{ color: '#c9a84c', fontSize: 11, margin: 0, letterSpacing: 1 }}>SALAS DE AULA</p>

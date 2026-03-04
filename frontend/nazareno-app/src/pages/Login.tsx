@@ -41,7 +41,11 @@ export default function Login() {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 28, margin: '0 auto 16px',
           boxShadow: '0 0 40px rgba(201,168,76,0.25)',
-        }}>✝</div>
+        }}>
+          <img style={{
+            width: 52
+          }} src='../../public/icon-192.png'/>
+        </div>
         <p style={{ color: '#fff', fontWeight: 700, fontSize: 22, margin: 0 }}>Nazareno União</p>
         <p style={{ color: '#c9a84c', fontSize: 12, margin: '4px 0 0', letterSpacing: 2, textTransform: 'uppercase' }}>
           Acesse sua conta
