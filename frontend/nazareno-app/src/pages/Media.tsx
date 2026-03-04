@@ -2,17 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 
-type MediaItem = {
-  id: string
-  title: string
-  url: string
-  type: string
-}
-
-type Room = {
-  id: string
-  name: string
-}
+type MediaItem = { id: string; title: string; url: string; type: string }
+type Room = { id: string; name: string }
 
 export default function Media() {
   const { roomId } = useParams()
@@ -36,18 +27,13 @@ export default function Media() {
 
       if (sessionData) {
         setSessionId(sessionData.id)
-
         const { data: mediaData } = await supabase
-          .from('media')
-          .select('*')
-          .eq('session_id', sessionData.id)
-
+          .from('media').select('*').eq('session_id', sessionData.id)
         if (mediaData) setMedia(mediaData)
       }
 
       setLoading(false)
     }
-
     fetchData()
   }, [roomId])
 
@@ -56,111 +42,111 @@ export default function Media() {
     if (!file || !sessionId) return
 
     setUploading(true)
-
     const ext = file.name.split('.').pop()
     const path = `${sessionId}/${Date.now()}.${ext}`
 
-    const { error: uploadError } = await supabase.storage
-      .from('media')
-      .upload(path, file)
-
-    if (uploadError) {
-      alert('Erro ao fazer upload')
-      setUploading(false)
-      return
-    }
+    const { error: uploadError } = await supabase.storage.from('media').upload(path, file)
+    if (uploadError) { alert('Erro ao fazer upload'); setUploading(false); return }
 
     const { data: urlData } = supabase.storage.from('media').getPublicUrl(path)
-
-    const fileType = file.type.startsWith('image')
-      ? 'image'
-      : file.type === 'application/pdf'
-      ? 'pdf'
-      : 'video'
+    const fileType = file.type.startsWith('image') ? 'image' : file.type === 'application/pdf' ? 'pdf' : 'video'
 
     const { data: newMedia } = await supabase
       .from('media')
-      .insert({
-        session_id: sessionId,
-        title: file.name,
-        url: urlData.publicUrl,
-        type: fileType,
-      })
-      .select()
-      .single()
+      .insert({ session_id: sessionId, title: file.name, url: urlData.publicUrl, type: fileType })
+      .select().single()
 
     if (newMedia) setMedia(prev => [...prev, newMedia])
     setUploading(false)
   }
 
-  const fileIcons: Record<string, string> = {
-    pdf: '📄',
-    image: '🖼️',
-    video: '🎥',
+  const fileConfig: Record<string, { icon: string; color: string }> = {
+    pdf:   { icon: '📄', color: '#e05555' },
+    image: { icon: '🖼️', color: '#5599e0' },
+    video: { icon: '🎥', color: '#9055e0' },
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 px-4 py-8">
-      <div className="max-w-md mx-auto">
+    <div style={{ background: '#0a0a0a', minHeight: '100vh', fontFamily: 'system-ui, sans-serif' }}>
 
+      {/* Header */}
+      <div style={{ background: '#111', borderBottom: '1px solid #1e1e1e', padding: '20px 20px 16px' }}>
         <button
           onClick={() => navigate('/rooms')}
-          className="text-gray-400 text-sm mb-6 flex items-center gap-2 hover:text-white transition"
+          style={{ background: 'none', border: 'none', color: '#c9a84c', fontSize: 14, cursor: 'pointer', padding: 0, marginBottom: 12 }}
         >
-          {'<-'} Voltar
+          ← Voltar
         </button>
+        <p style={{ color: '#fff', fontWeight: 700, fontSize: 18, margin: 0 }}>Mídia</p>
+        <p style={{ color: '#c9a84c', fontSize: 11, margin: '2px 0 0', letterSpacing: 1, textTransform: 'uppercase' }}>
+          {room?.name} — aula de hoje
+        </p>
+      </div>
 
-        <div className="mb-6">
-          <h1 className="text-white text-2xl font-semibold">Media</h1>
-          <p className="text-gray-400 text-sm mt-1">{room?.name} — aula de hoje</p>
-        </div>
+      <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
 
-        <label
-          className={`w-full mb-6 flex items-center justify-center gap-3 rounded-2xl px-6 py-4 border-2 border-dashed transition cursor-pointer ${
-            uploading
-              ? 'border-gray-700 text-gray-600'
-              : 'border-indigo-500/50 hover:border-indigo-500 text-indigo-400 hover:text-indigo-300'
-          }`}
-        >
-          <span className="text-xl">{uploading ? '...' : '+'}</span>
-          <span className="font-medium text-sm">
-            {uploading ? 'Enviando...' : 'Adicionar midia'}
+        {/* Upload */}
+        <label style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+          background: '#141414',
+          border: uploading ? '1px dashed #2a2a2a' : '1px dashed #c9a84c66',
+          borderRadius: 14, padding: '18px 16px',
+          cursor: uploading ? 'not-allowed' : 'pointer',
+          color: uploading ? '#444' : '#c9a84c',
+        }}>
+          <span style={{ fontSize: 20 }}>{uploading ? '⏳' : '+'}</span>
+          <span style={{ fontWeight: 600, fontSize: 14 }}>
+            {uploading ? 'Enviando...' : 'Adicionar mídia'}
           </span>
           <input
             type="file"
             accept="image/*,application/pdf,video/*"
-            className="hidden"
+            style={{ display: 'none' }}
             onChange={handleUpload}
             disabled={uploading}
           />
         </label>
 
         {loading ? (
-          <p className="text-gray-400 text-center">Carregando...</p>
+          <p style={{ color: '#444', textAlign: 'center', marginTop: 40, fontSize: 14 }}>Carregando...</p>
         ) : !sessionId ? (
-          <p className="text-gray-400 text-center">Nenhuma aula hoje.</p>
+          <p style={{ color: '#444', textAlign: 'center', marginTop: 40, fontSize: 14 }}>Nenhuma aula hoje.</p>
         ) : media.length === 0 ? (
-          <p className="text-gray-400 text-center">Nenhuma midia adicionada ainda.</p>
-        ) : (
-          <div className="flex flex-col gap-3">
-            {media.map((item) => (
-              <a
-                key={item.id}
-                href={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-gray-900 hover:bg-gray-800 rounded-2xl px-6 py-4 flex items-center gap-4 transition"
-              >
-                <span className="text-2xl">{fileIcons[item.type] ?? '📎'}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-white font-medium truncate">{item.title}</p>
-                  <p className="text-gray-400 text-sm capitalize">{item.type}</p>
-                </div>
-                <span className="text-gray-600 text-sm">open</span>
-              </a>
-            ))}
-          </div>
-        )}
+          <p style={{ color: '#555', textAlign: 'center', marginTop: 24, fontSize: 14 }}>Nenhuma mídia adicionada ainda.</p>
+        ) : media.map(item => {
+          const config = fileConfig[item.type] ?? { icon: '📎', color: '#888' }
+          return (
+            <a
+              key={item.id}
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                background: '#141414', border: '1px solid #1e1e1e',
+                borderRadius: 14, padding: '14px 16px',
+                display: 'flex', alignItems: 'center', gap: 14,
+                textDecoration: 'none',
+              }}
+            >
+              <div style={{
+                width: 44, height: 44, borderRadius: 12, flexShrink: 0,
+                background: `${config.color}18`,
+                border: `1px solid ${config.color}33`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 22,
+              }}>
+                {config.icon}
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ color: '#fff', fontWeight: 600, fontSize: 14, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {item.title}
+                </p>
+                <p style={{ color: '#555', fontSize: 12, margin: '2px 0 0', textTransform: 'capitalize' }}>{item.type}</p>
+              </div>
+              <span style={{ color: '#c9a84c', fontSize: 16 }}>↗</span>
+            </a>
+          )
+        })}
       </div>
     </div>
   )

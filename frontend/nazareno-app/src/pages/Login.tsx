@@ -12,54 +12,118 @@ export default function Login() {
   async function handleLogin() {
     setLoading(true)
     setError('')
-
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-
     if (error) {
       setError('Email ou senha inválidos')
     } else {
       navigate('/dashboard')
     }
-
     setLoading(false)
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
-      <div className="w-full max-w-sm bg-gray-900 rounded-2xl p-8 shadow-xl">
-        <div className="text-center mb-8">
-          <span className="text-4xl">✝️</span>
-          <h1 className="text-white text-2xl font-semibold mt-2">Church Connect</h1>
-          <p className="text-gray-400 text-sm mt-1">Faça login para continuar</p>
-        </div>
+    <div style={{
+      background: '#0a0a0a',
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '24px 20px',
+      fontFamily: 'system-ui, sans-serif',
+    }}>
 
-        <div className="flex flex-col gap-4">
+      {/* Logo */}
+      <div style={{ textAlign: 'center', marginBottom: 40 }}>
+        <div style={{
+          width: 72, height: 72, borderRadius: '50%',
+          background: 'linear-gradient(135deg, #c9a84c, #f0d080)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 28, margin: '0 auto 16px',
+          boxShadow: '0 0 40px rgba(201,168,76,0.25)',
+        }}>✝</div>
+        <p style={{ color: '#fff', fontWeight: 700, fontSize: 22, margin: 0 }}>Nazareno União</p>
+        <p style={{ color: '#c9a84c', fontSize: 12, margin: '4px 0 0', letterSpacing: 2, textTransform: 'uppercase' }}>
+          Acesse sua conta
+        </p>
+      </div>
+
+      {/* Card */}
+      <div style={{
+        width: '100%', maxWidth: 360,
+        background: '#141414',
+        border: '1px solid #1e1e1e',
+        borderRadius: 20,
+        padding: '28px 24px',
+      }}>
+        {/* Email */}
+        <div style={{ marginBottom: 16 }}>
+          <p style={{ color: '#c9a84c', fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
+            Email
+          </p>
           <input
             type="email"
-            placeholder="Email"
+            placeholder="seu@email.com"
             value={email}
             onChange={e => setEmail(e.target.value)}
-            className="bg-gray-800 text-white rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+            style={{
+              width: '100%', boxSizing: 'border-box',
+              background: '#0a0a0a', border: '1px solid #2a2a2a',
+              borderRadius: 12, padding: '14px 16px',
+              color: '#fff', fontSize: 15, outline: 'none',
+            }}
+            onFocus={e => (e.target.style.borderColor = '#c9a84c')}
+            onBlur={e => (e.target.style.borderColor = '#2a2a2a')}
           />
+        </div>
+
+        {/* Senha */}
+        <div style={{ marginBottom: 24 }}>
+          <p style={{ color: '#c9a84c', fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
+            Senha
+          </p>
           <input
             type="password"
-            placeholder="Senha"
+            placeholder="••••••••"
             value={password}
             onChange={e => setPassword(e.target.value)}
-            className="bg-gray-800 text-white rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+            onKeyDown={e => e.key === 'Enter' && handleLogin()}
+            style={{
+              width: '100%', boxSizing: 'border-box',
+              background: '#0a0a0a', border: '1px solid #2a2a2a',
+              borderRadius: 12, padding: '14px 16px',
+              color: '#fff', fontSize: 15, outline: 'none',
+            }}
+            onFocus={e => (e.target.style.borderColor = '#c9a84c')}
+            onBlur={e => (e.target.style.borderColor = '#2a2a2a')}
           />
-
-          {error && <p className="text-red-400 text-sm text-center">{error}</p>}
-
-          <button
-            onClick={handleLogin}
-            disabled={loading}
-            className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl py-3 text-sm font-medium transition disabled:opacity-50"
-          >
-            {loading ? 'Entrando...' : 'Entrar'}
-          </button>
         </div>
+
+        {error && (
+          <p style={{ color: '#e05555', fontSize: 13, textAlign: 'center', marginBottom: 16 }}>{error}</p>
+        )}
+
+        <button
+          onClick={handleLogin}
+          disabled={loading}
+          style={{
+            width: '100%',
+            background: loading ? '#5a4a1a' : 'linear-gradient(135deg, #c9a84c, #f0d080)',
+            color: '#000', fontWeight: 700,
+            fontSize: 15, border: 'none',
+            borderRadius: 14, padding: '16px',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            opacity: loading ? 0.7 : 1,
+            letterSpacing: 0.5,
+          }}
+        >
+          {loading ? 'Entrando...' : 'Entrar'}
+        </button>
       </div>
+
+      <p style={{ color: '#333', fontSize: 12, marginTop: 32 }}>
+        Igreja © {new Date().getFullYear()}
+      </p>
     </div>
   )
 }
