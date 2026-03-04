@@ -3,8 +3,9 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Rooms from './pages/Rooms'
 import Members from './pages/Members'
-import PrivateRoute from './components/PrivateRoute'
 import Ranking from './pages/Ranking'
+import Media from './pages/Media'
+import PrivateRoute from './components/PrivateRoute'
 
 export default function App() {
   return (
@@ -24,6 +25,11 @@ export default function App() {
         <Route path="/rooms/:roomId" element={
           <PrivateRoute>
             <Members />
+          </PrivateRoute>
+        } />
+        <Route path="/rooms/:roomId/media" element={
+          <PrivateRoute>
+            <Media />
           </PrivateRoute>
         } />
         <Route path="/ranking" element={
