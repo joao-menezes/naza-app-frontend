@@ -10,8 +10,8 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Church Connect',
-        short_name: 'Church',
+        name: 'Nazareno App',
+        short_name: 'INU',
         description: 'Gestão de presença e aulas da igreja',
         theme_color: '#0a0a0a',
         background_color: '#0a0a0a',
