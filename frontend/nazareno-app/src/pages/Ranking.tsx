@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import '../styles/ranking.css'
 
 type RankingEntry = {
   member_id: string
@@ -44,82 +45,59 @@ export default function Ranking() {
   }, [])
 
   const medals = ['🥇', '🥈', '🥉']
-  const topColors = [
-    { bg: '#1a1500', border: '#c9a84c44', nameColor: '#f0d080' },
-    { bg: '#141414', border: '#88888833', nameColor: '#ccc' },
-    { bg: '#160e00', border: '#cd7f3233', nameColor: '#e8a96a' },
-  ]
 
   return (
-    <div style={{ background: '#0a0a0a', minHeight: '100vh', fontFamily: 'system-ui, sans-serif' }}>
-
-      {/* Header */}
-      <div style={{ background: '#111', borderBottom: '1px solid #1e1e1e', padding: '20px 20px 16px' }}>
+    <div className="ranking-page">
+      <div className="ranking-header">
         <button
           onClick={() => navigate('/rooms')}
-          style={{ background: 'none', border: 'none', color: '#c9a84c', fontSize: 14, cursor: 'pointer', padding: 0, marginBottom: 12 }}
+          className="ranking-back-button"
         >
           ← Voltar
         </button>
-        <p style={{ color: '#fff', fontWeight: 700, fontSize: 18, margin: 0 }}>Ranking</p>
-        <p style={{ color: '#c9a84c', fontSize: 11, margin: '2px 0 0', letterSpacing: 1, textTransform: 'uppercase' }}>
-          Membros mais presentes
-        </p>
+        <p className="ranking-title">Ranking</p>
+        <p className="ranking-subtitle">Membros mais presentes</p>
       </div>
 
-      <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div className="ranking-list">
         {loading ? (
-          <p style={{ color: '#444', textAlign: 'center', marginTop: 40, fontSize: 14 }}>Carregando...</p>
+          <p className="ranking-empty">Carregando...</p>
         ) : ranking.length === 0 ? (
-          <p style={{ color: '#444', textAlign: 'center', marginTop: 40, fontSize: 14 }}>Nenhuma presença registrada ainda.</p>
-        ) : ranking.map((entry, index) => {
-          const style = topColors[index] ?? { bg: '#141414', border: '#1e1e1e', nameColor: '#fff' }
-          return (
-            <div
-              key={entry.member_id}
-              style={{
-                background: style.bg,
-                border: `1px solid ${style.border}`,
-                borderRadius: 14, padding: '14px 16px',
-                display: 'flex', alignItems: 'center', gap: 14,
-              }}
-            >
-              {/* Posição */}
-              <div style={{ width: 28, textAlign: 'center', flexShrink: 0 }}>
-                {index < 3 ? (
-                  <span style={{ fontSize: 22 }}>{medals[index]}</span>
-                ) : (
-                  <span style={{ color: '#444', fontWeight: 700, fontSize: 14 }}>#{index + 1}</span>
-                )}
-              </div>
+          <p className="ranking-empty">Nenhuma presença registrada ainda.</p>
+        ) : (
+          ranking.map((entry, index) => {
+            const medalClass =
+              index === 0 ? 'gold' :
+              index === 1 ? 'silver' :
+              index === 2 ? 'bronze' : ''
 
-              {/* Avatar */}
-              <div style={{
-                width: 42, height: 42, borderRadius: '50%', flexShrink: 0,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontWeight: 700, fontSize: 16,
-                background: index === 0 ? 'linear-gradient(135deg, #c9a84c, #f0d080)' : '#1e1e1e',
-                color: index === 0 ? '#000' : '#555',
-              }}>
-                {entry.name.charAt(0).toUpperCase()}
-              </div>
+            return (
+              <div key={entry.member_id} className={`ranking-card ${medalClass}`}>
+                <div className="ranking-position">
+                  {index < 3 ? (
+                    <span className="ranking-position-medal">{medals[index]}</span>
+                  ) : (
+                    <span className="ranking-position-number">#{index + 1}</span>
+                  )}
+                </div>
 
-              {/* Info */}
-              <div style={{ flex: 1 }}>
-                <p style={{ color: style.nameColor, fontWeight: 600, fontSize: 15, margin: 0 }}>{entry.name}</p>
-                <p style={{ color: '#555', fontSize: 12, margin: '2px 0 0' }}>{entry.room_name}</p>
-              </div>
+                <div className={`ranking-avatar ${medalClass}`}>
+                  {entry.name.charAt(0).toUpperCase()}
+                </div>
 
-              {/* Total */}
-              <div style={{ textAlign: 'right' }}>
-                <p style={{ color: index === 0 ? '#c9a84c' : '#fff', fontWeight: 700, fontSize: 20, margin: 0 }}>
-                  {entry.total}
-                </p>
-                <p style={{ color: '#444', fontSize: 11, margin: '2px 0 0' }}>presenças</p>
+                <div className="ranking-info">
+                  <p className={`ranking-name ${medalClass}`}>{entry.name}</p>
+                  <p className="ranking-room">{entry.room_name}</p>
+                </div>
+
+                <div className="ranking-total-wrapper">
+                  <p className={`ranking-total ${medalClass}`}>{entry.total}</p>
+                  <p className="ranking-total-label">presenças</p>
+                </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })
+        )}
       </div>
     </div>
   )

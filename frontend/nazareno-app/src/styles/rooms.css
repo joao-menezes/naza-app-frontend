@@ -1,0 +1,188 @@
+.rooms-page {
+  background: #0a0a0a;
+  min-height: 100vh;
+  font-family: system-ui, sans-serif;
+}
+
+/* Header */
+.rooms-header {
+  background: #111;
+  border-bottom: 1px solid #1e1e1e;
+  padding: 20px 20px 16px;
+}
+
+.rooms-header-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rooms-header-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c9a84c, #f0d080);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.rooms-header-title {
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  margin: 0;
+}
+
+.rooms-header-sub {
+  color: #c9a84c;
+  font-size: 11px;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+/* Content */
+.rooms-content {
+  padding: 16px;
+}
+
+.rooms-section-label {
+  color: #555;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.rooms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rooms-loading {
+  color: #444;
+  text-align: center;
+  margin-top: 40px;
+  font-size: 14px;
+}
+
+/* Card */
+.room-card {
+  background: #141414;
+  border: 1px solid #1e1e1e;
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.room-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #1a1a0f;
+  border: 1px solid #2a2a18;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.room-card-info {
+  flex: 1;
+}
+
+.room-card-name {
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0;
+}
+
+.room-card-label {
+  color: #555;
+  font-size: 12px;
+  margin: 2px 0 0;
+}
+
+.room-card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, #c9a84c, #f0d080);
+  color: #000;
+  font-weight: 600;
+  font-size: 12px;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: #1a1a0f;
+  color: #c9a84c;
+  font-weight: 600;
+  font-size: 12px;
+  border: 1px solid #2a2a18;
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+/* Ranking */
+.ranking-btn {
+  background: #141414;
+  border: 1px solid #c9a84c33;
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.ranking-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #1a1a0f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.ranking-info {
+  flex: 1;
+  text-align: left;
+}
+
+.ranking-title {
+  color: #c9a84c;
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0;
+}
+
+.ranking-sub {
+  color: #555;
+  font-size: 12px;
+  margin: 2px 0 0;
+}
+
+.ranking-arrow {
+  color: #c9a84c;
+  font-size: 18px;
+}

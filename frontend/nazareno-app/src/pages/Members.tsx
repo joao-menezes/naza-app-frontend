@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import '../styles/members.css'
 
 type Member = { id: string; name: string; email: string }
 type Room = { id: string; name: string }
@@ -74,56 +75,54 @@ export default function Members() {
   const presentCount = Object.values(attendance).filter(Boolean).length
   const progress = members.length ? (presentCount / members.length) * 100 : 0
 
-  return (
-    <div style={{ background: '#0a0a0a', minHeight: '100vh', fontFamily: 'system-ui, sans-serif' }}>
+return (
+  <div className="members-page">
 
-      {/* Header */}
-      <div style={{ background: '#111', borderBottom: '1px solid #1e1e1e', padding: '20px 20px 16px' }}>
-        <button
-          onClick={() => navigate('/rooms')}
-          style={{ background: 'none', border: 'none', color: '#c9a84c', fontSize: 14, cursor: 'pointer', padding: 0, marginBottom: 12 }}
-        >
-          ← Voltar
-        </button>
-        <p style={{ color: '#fff', fontWeight: 700, fontSize: 18, margin: 0 }}>{room?.name}</p>
-        <p style={{ color: '#c9a84c', fontSize: 11, margin: '2px 0 0', letterSpacing: 1, textTransform: 'uppercase' }}>
-          Chamada de hoje
+    <div className="members-header">
+      <button
+        onClick={() => navigate('/rooms')}
+        className="members-back-button"
+      >
+        ← Voltar
+      </button>
+
+      <p className="members-room-title">{room?.name}</p>
+      <p className="members-room-subtitle">Chamada de hoje</p>
+    </div>
+
+    <div className="members-progress-wrapper">
+      <div className="members-progress-card">
+        <div className="members-progress-info">
+          <div className="members-progress-header">
+            <span className="members-progress-label">Presença</span>
+            <span className="members-progress-count">
+              {presentCount} / {members.length}
+            </span>
+          </div>
+
+          <div className="members-progress-bar-bg">
+            <div
+              className="members-progress-bar-fill"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
+
+        <p className="members-progress-percent">
+          {Math.round(progress)}%
         </p>
       </div>
+    </div>
 
-      {/* Progresso */}
-      <div style={{ padding: '14px 16px 0' }}>
-        <div style={{
-          background: '#141414', border: '1px solid #1e1e1e',
-          borderRadius: 14, padding: '14px 16px',
-          display: 'flex', alignItems: 'center', gap: 16,
-        }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-              <span style={{ color: '#555', fontSize: 12 }}>Presença</span>
-              <span style={{ color: '#c9a84c', fontSize: 12, fontWeight: 600 }}>{presentCount} / {members.length}</span>
-            </div>
-            <div style={{ background: '#1a1a1a', borderRadius: 99, height: 6 }}>
-              <div style={{
-                height: 6, borderRadius: 99,
-                background: 'linear-gradient(90deg, #c9a84c, #f0d080)',
-                width: `${progress}%`, transition: 'width 0.3s',
-              }} />
-            </div>
-          </div>
-          <p style={{ color: '#c9a84c', fontWeight: 700, fontSize: 20, margin: 0 }}>
-            {Math.round(progress)}%
-          </p>
-        </div>
-      </div>
-
-      {/* Lista */}
-      <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {loading ? (
-          <p style={{ color: '#444', textAlign: 'center', marginTop: 40, fontSize: 14 }}>Carregando...</p>
-        ) : members.length === 0 ? (
-          <p style={{ color: '#444', textAlign: 'center', marginTop: 40, fontSize: 14 }}>Nenhum membro nessa sala.</p>
-        ) : members.map(member => {
+    <div className="members-list">
+      {loading ? (
+        <p className="members-empty">Carregando...</p>
+      ) : members.length === 0 ? (
+        <p className="members-empty">
+          Nenhum membro nessa sala.
+        </p>
+      ) : (
+        members.map(member => {
           const present = attendance[member.id] ?? false
           const isSaving = saving === member.id
 
@@ -132,44 +131,54 @@ export default function Members() {
               key={member.id}
               onClick={() => toggleAttendance(member.id)}
               disabled={isSaving}
-              style={{
-                background: present ? '#1a1a0f' : '#141414',
-                border: present ? '1px solid #c9a84c55' : '1px solid #1e1e1e',
-                borderRadius: 14, padding: '14px 16px',
-                display: 'flex', alignItems: 'center', gap: 14,
-                cursor: 'pointer', width: '100%', transition: 'all 0.15s',
-              }}
+              className={`member-card ${
+                present ? 'member-present' : 'member-absent'
+              }`}
             >
-              <div style={{
-                width: 42, height: 42, borderRadius: '50%', flexShrink: 0,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontWeight: 700, fontSize: 16,
-                background: present ? 'linear-gradient(135deg, #c9a84c, #f0d080)' : '#1e1e1e',
-                color: present ? '#000' : '#555',
-              }}>
+              <div
+                className={`member-avatar ${
+                  present ? 'avatar-present' : 'avatar-absent'
+                }`}
+              >
                 {member.name.charAt(0).toUpperCase()}
               </div>
-              <div style={{ flex: 1, textAlign: 'left' }}>
-                <p style={{ color: present ? '#fff' : '#888', fontWeight: 600, fontSize: 15, margin: 0 }}>
+
+              <div className="member-info">
+                <p
+                  className={`member-name ${
+                    present
+                      ? 'member-name-present'
+                      : 'member-name-absent'
+                  }`}
+                >
                   {member.name}
                 </p>
-                <p style={{ color: present ? '#c9a84c' : '#444', fontSize: 12, margin: '2px 0 0' }}>
+
+                <p
+                  className={`member-status ${
+                    present
+                      ? 'status-present'
+                      : 'status-absent'
+                  }`}
+                >
                   {present ? 'Presente' : 'Ausente'}
                 </p>
               </div>
-              <div style={{
-                width: 28, height: 28, borderRadius: '50%',
-                background: present ? 'linear-gradient(135deg, #c9a84c, #f0d080)' : '#1e1e1e',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 14, color: present ? '#000' : '#444',
-                border: present ? 'none' : '1px solid #2a2a2a',
-              }}>
+
+              <div
+                className={`member-status-icon ${
+                  present
+                    ? 'status-icon-present'
+                    : 'status-icon-absent'
+                }`}
+              >
                 {isSaving ? '⏳' : present ? '✓' : '○'}
               </div>
             </button>
           )
-        })}
-      </div>
+        })
+      )}
     </div>
-  )
+  </div>
+)
 }
