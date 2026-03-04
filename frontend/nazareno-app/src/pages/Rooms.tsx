@@ -59,6 +59,14 @@ export default function Rooms() {
           </div>
         )}
       </div>
+      <button
+          onClick={() => navigate('/ranking')}
+          className="mt-4 w-full bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 rounded-2xl px-6 py-4 flex items-center gap-4 transition"
+        >
+          <span className="text-2xl">🏆</span>
+          <p className="font-medium">Ver Ranking</p>
+          <span className="ml-auto text-gray-600">›</span>
+        </button>
     </div>
   )
 }
