@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { exportRelatorio } from '../lib/exportPDF'
+
 import '../styles/rooms.css'
 
 type Room = {
@@ -52,6 +54,12 @@ export default function Rooms() {
     fetchData()
   }, [])
 
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    navigate('/')
+  }
+  
+
   const visibleRooms = appUser?.role === 'teacher'
     ? rooms.filter(r => r.id === appUser.room_id)
     : rooms
@@ -71,7 +79,17 @@ export default function Rooms() {
             <p className="rooms-header-title">Nazareno União</p>
             <p className="rooms-header-sub">SALAS DE AULA</p>
           </div>
-        <p className="rooms-header-sub">{appUser?.name ?? 'Carregando...'}</p>
+          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span className='rooms-header-sub' style={{ fontSize: 13, fontWeight: 500 }}>
+              {appUser?.name ?? '...'}
+            </span>
+            <button
+              onClick={handleLogout}
+              className='btn-secondary'
+            >
+              Sair
+            </button>
+          </div>
         </div>
       </div>
 
@@ -112,28 +130,38 @@ export default function Rooms() {
                 </div>
                 <span className="ranking-arrow">›</span>
               </button>
+              <div className="adm-area">
+                {appUser?.role === 'admin' && (
+                  <>
+                    <button className="admin-btn" onClick={() => navigate('/manage-members')}>
+                      <div className="admin-btn-icon">⚙️</div>
+                      <div className="ranking-info">
+                        <p className="admin-btn-title">Gerenciar Membros</p>
+                        <p className="admin-btn-sub">Adicionar e editar membros</p>
+                      </div>
+                      <span className="admin-btn-arrow">›</span>
+                    </button>
 
-              {appUser?.role === 'admin' && (
-                <>
-                  <button className="admin-btn" onClick={() => navigate('/manage-members')}>
-                    <div className="admin-btn-icon">⚙️</div>
-                    <div className="ranking-info">
-                      <p className="admin-btn-title">Gerenciar Membros</p>
-                      <p className="admin-btn-sub">Adicionar e editar membros</p>
-                    </div>
-                    <span className="admin-btn-arrow">›</span>
-                  </button>
+                    <button className="admin-btn" onClick={() => navigate('/manage-teachers')}>
+                      <div className="admin-btn-icon">👨‍🏫</div>
+                      <div className="ranking-info">
+                        <p className="admin-btn-title">Gerenciar Professores</p>
+                        <p className="admin-btn-sub">Vincular professores às salas</p>
+                      </div>
+                      <span className="admin-btn-arrow">›</span>
+                    </button>
 
-                  <button className="admin-btn" onClick={() => navigate('/manage-teachers')}>
-                    <div className="admin-btn-icon">👨‍🏫</div>
-                    <div className="ranking-info">
-                      <p className="admin-btn-title">Gerenciar Professores</p>
-                      <p className="admin-btn-sub">Vincular professores às salas</p>
-                    </div>
-                    <span className="admin-btn-arrow">›</span>
-                  </button>
-                </>
-              )}
+                    <button className="admin-btn" onClick={exportRelatorio}>
+                      <div className="admin-btn-icon">📄</div>
+                      <div className="ranking-info">
+                        <p className="admin-btn-title">Exportar Relatório</p>
+                        <p className="admin-btn-sub">Baixar PDF com todos os dados</p>
+                      </div>
+                      <span className="admin-btn-arrow">›</span>
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </>
         )}
