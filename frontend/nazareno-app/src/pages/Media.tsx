@@ -21,23 +21,15 @@ export default function Media() {
 
       const [{ data: roomData }, { data: sessionData }] = await Promise.all([
         supabase.from('rooms').select('*').eq('id', roomId).single(),
-        supabase.from('sessions')
-          .select('*')
-          .eq('room_id', roomId)
-          .eq('date', today)
-          .single(),
+        supabase.from('sessions').select('*').eq('room_id', roomId).eq('date', today).maybeSingle(),
       ])
 
       if (roomData) setRoom(roomData)
 
       if (sessionData) {
         setSessionId(sessionData.id)
-
         const { data: mediaData } = await supabase
-          .from('media')
-          .select('*')
-          .eq('session_id', sessionData.id)
-
+          .from('media').select('*').eq('session_id', sessionData.id)
         if (mediaData) setMedia(mediaData)
       }
 
@@ -143,7 +135,6 @@ export default function Media() {
           />
         </label>
 
-        {/* Estados */}
         {loading ? (
           <p className="stateMessage">
             Carregando...
@@ -196,7 +187,6 @@ export default function Media() {
             )
           })
         )}
-
       </div>
     </div>
   )

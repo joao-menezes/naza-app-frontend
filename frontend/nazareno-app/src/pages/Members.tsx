@@ -21,24 +21,14 @@ export default function Members() {
     async function fetchData() {
       const today = new Date().toISOString().split('T')[0]
 
-      const [{ data: roomData }, { data: membersData }] = await Promise.all([
+      const [{ data: roomData }, { data: membersData }, { data: sessionData }] = await Promise.all([
         supabase.from('rooms').select('*').eq('id', roomId).single(),
         supabase.from('profiles').select('*').eq('room_id', roomId),
+        supabase.from('sessions').select('*').eq('room_id', roomId).eq('date', today).maybeSingle(),
       ])
 
       if (roomData) setRoom(roomData)
       if (membersData) setMembers(membersData)
-
-      let { data: sessionData } = await supabase
-        .from('sessions').select('*').eq('room_id', roomId).eq('date', today).single()
-
-      if (!sessionData) {
-        const { data: newSession } = await supabase
-          .from('sessions')
-          .insert({ room_id: roomId, date: today, title: `Aula ${today}` })
-          .select().single()
-        sessionData = newSession
-      }
 
       if (sessionData) {
         setSessionId(sessionData.id)

@@ -9,6 +9,13 @@ type Room = {
   type: string
 }
 
+type AppUser = {
+  id: string
+  name: string
+  role: string
+  room_id: string | null
+}
+
 const roomConfig: Record<string, { icon: string; label: string }> = {
   children:  { icon: '🧒', label: 'Infantil' },
   teenagers: { icon: '🧑', label: 'Adolescentes' },
@@ -19,29 +26,52 @@ const roomConfig: Record<string, { icon: string; label: string }> = {
 export default function Rooms() {
   const navigate = useNavigate()
   const [rooms, setRooms] = useState<Room[]>([])
+  const [appUser, setAppUser] = useState<AppUser | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    async function fetchRooms() {
-      const { data } = await supabase.from('rooms').select('*')
-      if (data) setRooms(data)
+    async function fetchData() {
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (user) {
+        const { data: userData } = await supabase
+          .from('app_users')
+          .select('*')
+          .eq('id', user.id)
+          .single()
+
+        if (userData) setAppUser(userData)
+      }
+
+      const { data: roomsData } = await supabase.from('rooms').select('*')
+      if (roomsData) setRooms(roomsData)
+
       setLoading(false)
     }
-    fetchRooms()
+
+    fetchData()
   }, [])
+
+  const visibleRooms = appUser?.role === 'teacher'
+    ? rooms.filter(r => r.id === appUser.room_id)
+    : rooms
 
   return (
     <div className="rooms-page">
-
       <div className="rooms-header">
         <div className="rooms-header-inner">
           <div className="rooms-header-logo">
-            <img src="/icon-192.png" width={36} alt="logo" />
+            <img src="/icon-192.png" width={26} alt="logo" />
           </div>
-          <div>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}>
             <p className="rooms-header-title">Nazareno União</p>
             <p className="rooms-header-sub">SALAS DE AULA</p>
           </div>
+        <p className="rooms-header-sub">{appUser?.name ?? 'Carregando...'}</p>
         </div>
       </div>
 
@@ -53,7 +83,7 @@ export default function Rooms() {
             <p className="rooms-section-label">Selecione uma sala</p>
 
             <div className="rooms-list">
-              {rooms.map(room => {
+              {visibleRooms.map(room => {
                 const config = roomConfig[room.type] ?? { icon: '📚', label: room.type }
                 return (
                   <div key={room.id} className="room-card">
@@ -82,6 +112,28 @@ export default function Rooms() {
                 </div>
                 <span className="ranking-arrow">›</span>
               </button>
+
+              {appUser?.role === 'admin' && (
+                <>
+                  <button className="admin-btn" onClick={() => navigate('/manage-members')}>
+                    <div className="admin-btn-icon">⚙️</div>
+                    <div className="ranking-info">
+                      <p className="admin-btn-title">Gerenciar Membros</p>
+                      <p className="admin-btn-sub">Adicionar e editar membros</p>
+                    </div>
+                    <span className="admin-btn-arrow">›</span>
+                  </button>
+
+                  <button className="admin-btn" onClick={() => navigate('/manage-teachers')}>
+                    <div className="admin-btn-icon">👨‍🏫</div>
+                    <div className="ranking-info">
+                      <p className="admin-btn-title">Gerenciar Professores</p>
+                      <p className="admin-btn-sub">Vincular professores às salas</p>
+                    </div>
+                    <span className="admin-btn-arrow">›</span>
+                  </button>
+                </>
+              )}
             </div>
           </>
         )}
