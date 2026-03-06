@@ -130,38 +130,47 @@ export default function Rooms() {
                 </div>
                 <span className="ranking-arrow">›</span>
               </button>
-              <div className="adm-area">
                 {appUser?.role === 'admin' && (
                   <>
-                    <button className="admin-btn" onClick={() => navigate('/manage-members')}>
-                      <div className="admin-btn-icon">⚙️</div>
-                      <div className="ranking-info">
-                        <p className="admin-btn-title">Gerenciar Membros</p>
-                        <p className="admin-btn-sub">Adicionar e editar membros</p>
-                      </div>
-                      <span className="admin-btn-arrow">›</span>
-                    </button>
+                    <div className="adm-area">
+                      <button className="admin-btn" onClick={() => navigate('/manage-members')}>
+                        <div className="admin-btn-icon">⚙️</div>
+                        <div className="ranking-info">
+                          <p className="admin-btn-title">Gerenciar Membros</p>
+                          <p className="admin-btn-sub">Adicionar e editar membros</p>
+                        </div>
+                        <span className="admin-btn-arrow">›</span>
+                      </button>
 
-                    <button className="admin-btn" onClick={() => navigate('/manage-teachers')}>
-                      <div className="admin-btn-icon">👨‍🏫</div>
-                      <div className="ranking-info">
-                        <p className="admin-btn-title">Gerenciar Professores</p>
-                        <p className="admin-btn-sub">Vincular professores às salas</p>
-                      </div>
-                      <span className="admin-btn-arrow">›</span>
-                    </button>
+                      <button className="admin-btn" onClick={() => navigate('/manage-teachers')}>
+                        <div className="admin-btn-icon">👨‍🏫</div>
+                        <div className="ranking-info">
+                          <p className="admin-btn-title">Gerenciar Professores</p>
+                          <p className="admin-btn-sub">Vincular professores às salas</p>
+                        </div>
+                        <span className="admin-btn-arrow">›</span>
+                      </button>
 
-                    <button className="admin-btn" onClick={exportRelatorio}>
-                      <div className="admin-btn-icon">📄</div>
-                      <div className="ranking-info">
-                        <p className="admin-btn-title">Exportar Relatório</p>
-                        <p className="admin-btn-sub">Baixar PDF com todos os dados</p>
-                      </div>
-                      <span className="admin-btn-arrow">›</span>
-                    </button>
+                      <button className="admin-btn" onClick={exportRelatorio}>
+                        <div className="admin-btn-icon">📄</div>
+                        <div className="ranking-info">
+                          <p className="admin-btn-title">Exportar Relatório</p>
+                          <p className="admin-btn-sub">Baixar PDF com todos os dados</p>
+                        </div>
+                        <span className="admin-btn-arrow">›</span>
+                      </button>
+
+                      <button className="admin-btn" onClick={() => navigate('/dashboard')}>
+                        <div className="admin-btn-icon">📊</div>
+                        <div className="ranking-info">
+                          <p className="admin-btn-title">Dashboard</p>
+                          <p className="admin-btn-sub">Visão geral do app</p>
+                        </div>
+                        <span className="admin-btn-arrow">›</span>
+                      </button>
+                    </div>
                   </>
                 )}
-              </div>
             </div>
           </>
         )}

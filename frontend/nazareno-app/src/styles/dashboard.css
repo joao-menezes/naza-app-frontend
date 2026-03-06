@@ -1,0 +1,177 @@
+.dashboard-page {
+  background: #0a0a0a;
+  min-height: 100vh;
+  font-family: system-ui, sans-serif;
+}
+
+/* Header */
+.dashboard-header {
+  background: #111;
+  border-bottom: 1px solid #1e1e1e;
+  padding: 20px 20px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dashboard-back {
+  background: none;
+  border: none;
+  color: #c9a84c;
+  font-size: 13px;
+  cursor: 'pointer';
+  padding: 0;
+  cursor: pointer;
+  width: 60px;
+  text-align: left;
+}
+
+.dashboard-header-center {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c9a84c, #f0d080);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.dashboard-title {
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  margin: 0;
+}
+
+.dashboard-sub {
+  color: #c9a84c;
+  font-size: 11px;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.dashboard-header-right {
+  width: 60px;
+}
+
+/* Content */
+.dashboard-content {
+  padding: 16px;
+  margin: 0 auto;
+}
+
+.dashboard-date {
+  color: #555;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+/* Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.dashboard-card {
+  background: #141414;
+  border: 1px solid #1e1e1e;
+  border-radius: 16px;
+  padding: 16px 14px;
+}
+
+.dashboard-card-gold {
+  background: #1a1a0f;
+  border: 1px solid #c9a84c33;
+  border-radius: 16px;
+  padding: 16px 14px;
+}
+
+.dashboard-card-icon {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.dashboard-card-value {
+  color: #fff;
+  font-weight: 700;
+  font-size: 26px;
+  margin: 0;
+}
+
+.dashboard-card-value-gold {
+  color: #c9a84c;
+  font-weight: 700;
+  font-size: 26px;
+  margin: 0;
+}
+
+.dashboard-card-label {
+  color: #555;
+  font-size: 11px;
+  margin: 4px 0 0;
+}
+
+/* Top member */
+.dashboard-section-label {
+  color: #555;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.dashboard-top-card {
+  background: #1a1a0f;
+  border: 1px solid #c9a84c33;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dashboard-top-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c9a84c, #f0d080);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 20px;
+  color: #000;
+  flex-shrink: 0;
+}
+
+.dashboard-top-name {
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  margin: 0;
+}
+
+.dashboard-top-sub {
+  color: #c9a84c;
+  font-size: 12px;
+  margin: 2px 0 0;
+}
+
+.dashboard-loading {
+  color: #444;
+  text-align: center;
+  margin-top: 60px;
+  font-size: 14px;
+}

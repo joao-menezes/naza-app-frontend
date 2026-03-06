@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Login from './pages/Login'
-import Dashboard from './pages/Dashboard'
+import Home from './pages/Home'
 import Rooms from './pages/Rooms'
 import Members from './pages/Members'
 import Ranking from './pages/Ranking'
@@ -9,15 +9,16 @@ import ManageMembers from './pages/ManageMembers'
 import ManageTeachers from './pages/ManageTeachers'
 
 import PrivateRoute from './components/PrivateRoute'
+import Dashboard from './pages/Dashboard'
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/dashboard" element={
+        <Route path="/home" element={
           <PrivateRoute>
-            <Dashboard />
+            <Home />
           </PrivateRoute>
         } />
         <Route path="/rooms" element={
@@ -48,6 +49,11 @@ export default function App() {
         <Route path="/manage-teachers" element={
           <PrivateRoute>
             <ManageTeachers />
+          </PrivateRoute>
+        } />
+        <Route path='/dashboard' element={
+          <PrivateRoute>
+            <Dashboard/>
           </PrivateRoute>
         } />
       </Routes>

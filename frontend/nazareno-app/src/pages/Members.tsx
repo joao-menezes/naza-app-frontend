@@ -44,6 +44,17 @@ export default function Members() {
     fetchData()
   }, [roomId])
 
+  function getNextSunday() {
+    const date = new Date();
+    const currentDay = date.getDay();
+    const daysUntilNextSunday = currentDay === 0 ? 7 : (7 - currentDay);
+    date.setDate(date.getDate() + daysUntilNextSunday);
+    return date;
+  }
+
+  const nextSunday = getNextSunday();
+  const formattedDate = nextSunday.toLocaleDateString('pt-BR');
+
   async function toggleAttendance(memberId: string) {
     if (!sessionId) return
     setSaving(memberId)
@@ -67,7 +78,6 @@ export default function Members() {
 
 return (
   <div className="members-page">
-
     <div className="members-header">
       <button
         onClick={() => navigate('/rooms')}
@@ -80,95 +90,109 @@ return (
       <p className="members-room-subtitle">Chamada de hoje</p>
     </div>
 
-    <div className="members-progress-wrapper">
-      <div className="members-progress-card">
-        <div className="members-progress-info">
-          <div className="members-progress-header">
-            <span className="members-progress-label">Presença</span>
-            <span className="members-progress-count">
-              {presentCount} / {members.length}
-            </span>
+  {!sessionId && !loading && (
+    <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+      <p style={{ color: '#fff', fontWeight: 600, fontSize: 16, margin: '0 0 6px' }}>
+        Sem aula hoje
+      </p>
+      <p style={{ color: '#555', fontSize: 13 }}>
+        A chamada será liberada automaticamente no próximo domingo - <span style={{color: '#c9a84c'}}>{formattedDate}</span>
+      </p>
+    </div>
+  )}
+
+  {sessionId && members.map(() => (
+    <>
+      <div className="members-progress-wrapper">
+        <div className="members-progress-card">
+          <div className="members-progress-info">
+            <div className="members-progress-header">
+              <span className="members-progress-label">Presença</span>
+              <span className="members-progress-count">
+                {presentCount} / {members.length}
+              </span>
+            </div>
+
+            <div className="members-progress-bar-bg">
+              <div
+                className="members-progress-bar-fill"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           </div>
 
-          <div className="members-progress-bar-bg">
-            <div
-              className="members-progress-bar-fill"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+          <p className="members-progress-percent">
+            {Math.round(progress)}%
+          </p>
         </div>
-
-        <p className="members-progress-percent">
-          {Math.round(progress)}%
-        </p>
       </div>
-    </div>
+      <div className="members-list">
+        {loading ? (
+          <p className="members-empty">Carregando...</p>
+        ) : members.length === 0 ? (
+          <p className="members-empty">
+            Nenhum membro nessa sala.
+          </p>
+        ) : (
+          members.map(member => {
+            const present = attendance[member.id] ?? false
+            const isSaving = saving === member.id
 
-    <div className="members-list">
-      {loading ? (
-        <p className="members-empty">Carregando...</p>
-      ) : members.length === 0 ? (
-        <p className="members-empty">
-          Nenhum membro nessa sala.
-        </p>
-      ) : (
-        members.map(member => {
-          const present = attendance[member.id] ?? false
-          const isSaving = saving === member.id
-
-          return (
-            <button
-              key={member.id}
-              onClick={() => toggleAttendance(member.id)}
-              disabled={isSaving}
-              className={`member-card ${
-                present ? 'member-present' : 'member-absent'
-              }`}
-            >
-              <div
-                className={`member-avatar ${
-                  present ? 'avatar-present' : 'avatar-absent'
+            return (
+              <button
+                key={member.id}
+                onClick={() => toggleAttendance(member.id)}
+                disabled={isSaving}
+                className={`member-card ${
+                  present ? 'member-present' : 'member-absent'
                 }`}
               >
-                {member.name.charAt(0).toUpperCase()}
-              </div>
-
-              <div className="member-info">
-                <p
-                  className={`member-name ${
-                    present
-                      ? 'member-name-present'
-                      : 'member-name-absent'
+                <div
+                  className={`member-avatar ${
+                    present ? 'avatar-present' : 'avatar-absent'
                   }`}
                 >
-                  {member.name}
-                </p>
+                  {member.name.charAt(0).toUpperCase()}
+                </div>
 
-                <p
-                  className={`member-status ${
+                <div className="member-info">
+                  <p
+                    className={`member-name ${
+                      present
+                        ? 'member-name-present'
+                        : 'member-name-absent'
+                    }`}
+                  >
+                    {member.name}
+                  </p>
+
+                  <p
+                    className={`member-status ${
+                      present
+                        ? 'status-present'
+                        : 'status-absent'
+                    }`}
+                  >
+                    {present ? 'Presente' : 'Ausente'}
+                  </p>
+                </div>
+
+                <div
+                  className={`member-status-icon ${
                     present
-                      ? 'status-present'
-                      : 'status-absent'
+                      ? 'status-icon-present'
+                      : 'status-icon-absent'
                   }`}
                 >
-                  {present ? 'Presente' : 'Ausente'}
-                </p>
-              </div>
-
-              <div
-                className={`member-status-icon ${
-                  present
-                    ? 'status-icon-present'
-                    : 'status-icon-absent'
-                }`}
-              >
-                {isSaving ? '⏳' : present ? '✓' : '○'}
-              </div>
-            </button>
-          )
-        })
-      )}
-    </div>
+                  {isSaving ? '⏳' : present ? '✓' : '○'}
+                </div>
+              </button>
+            )
+          })
+        )}
+      </div>
+      </>
+    ))}
   </div>
 )
 }

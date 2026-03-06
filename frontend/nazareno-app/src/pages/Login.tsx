@@ -17,7 +17,7 @@ export default function Login() {
     if (error) {
       setError('Email ou senha inválidos')
     } else {
-      navigate('/dashboard')
+      navigate('/rooms')
     }
     setLoading(false)
   }
